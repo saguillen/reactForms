@@ -11,12 +11,15 @@ function App() {
 
   const handleEmailChange = ((e) => {
     setFormValues({...formValues, email: e.target.value})
+
+
+
   });
  
   const handlePasswordChange = ((e) => {
     setFormValues({...formValues, password: e.target.value})
-
-    if(e.target.value.length >= 9 && e.target.value.match(/(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])/gm)){
+    const passwordRegex = /^(?!^[0-9]*$)(?!^[a-zA-Z]*$)^([a-zA-Z0-9]{6,15})$/gm;
+    if(e.target.value.length >= 9 && e.target.value.match(passwordRegex)){
       setValidationStates({...validationStates, passwordState: true});
     }else{
       setValidationStates({...validationStates, passwordState: false});
@@ -34,10 +37,10 @@ function App() {
     const isEmailValid = emailRegex.test(formValues.email);
     if (isEmailValid) {
         setValidationStates({...validationStates, emailState: true});
-        alert("Email is valid");
+        //alert("Email is valid");
     }else{
-      setValidationStates({...validationStates, emailState: true});
-      alert("Email is not valid");
+      setValidationStates({...validationStates, emailState: false});
+      //alert("Email is not valid");
     }
 
     //setValidationStates({...validationStates, emailState: isEmailValid});
@@ -51,13 +54,13 @@ function App() {
       <Form>
       <Form.Group className="mb-6" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" onChange={handleEmailChange} value={formValues.email}/>
-        { !validationStates.emailState && <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>}
+        <Form.Control type="email" placeholder="Enter email" onChange={handleEmailChange} value={formValues.email} isInvalid={!(validationStates.emailState)}/>
+        { !validationStates.emailState && <Form.Text className="text-muted" type= "invalid" >We'll never share your email with anyone else.</Form.Text>}
       </Form.Group>
  
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange} value={formValues.password} />
+        <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange} value={formValues.password} isValid={validationStates.passwordState} isInvalid={!validationStates.passwordState}/>
         { !validationStates.passwordState && <Form.Text className="text-muted">Your password should be have numbers and letters and should be at least 9 char long</Form.Text>}
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicCheckbox">
